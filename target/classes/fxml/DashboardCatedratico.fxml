@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="app.controladores.DashboardCatedraticoController"
+            prefWidth="1100" prefHeight="700"
+            style="-fx-background-color: #0a0f1e;"
+            stylesheets="@../css/estilos.css">
+    <left>
+        <VBox styleClass="sidebar" spacing="0" maxWidth="250" minWidth="250">
+            <VBox styleClass="sidebar-header" spacing="6">
+                <Label text="🎓" style="-fx-font-size:26px;"/>
+                <Label text="Panel Catedrático" styleClass="sidebar-titulo"/>
+                <HBox alignment="CENTER_LEFT" spacing="6">
+                    <Circle radius="4" fill="#27ae60"/>
+                    <Label fx:id="lblUsuario" text="" style="-fx-text-fill:rgba(255,255,255,0.6);-fx-font-size:11px;"/>
+                </HBox>
+            </VBox>
+
+            <Label text="MIS CURSOS" styleClass="sidebar-seccion"/>
+            <ScrollPane VBox.vgrow="ALWAYS" hbarPolicy="NEVER" fitToWidth="true"
+                        style="-fx-background-color:transparent;-fx-background:transparent;">
+                <VBox fx:id="listaCursosSidebar" spacing="2" style="-fx-padding:4 8;"/>
+            </ScrollPane>
+
+            <Label text="HERRAMIENTAS" styleClass="sidebar-seccion"/>
+            <Button text="  📊  Historial de Asistencias" styleClass="btn-menu"
+                    maxWidth="1.7976931348623157E308" onAction="#irAsistencias"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+            <Separator style="-fx-opacity:0.2;"/>
+            <Button text="  🚪  Cerrar Sesión" styleClass="btn-menu"
+                    style="-fx-text-fill:rgba(255,100,100,0.8);"
+                    maxWidth="1.7976931348623157E308" onAction="#cerrarSesion"/>
+            <Region minHeight="8"/>
+        </VBox>
+    </left>
+    <center>
+        <VBox>
+            <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="15">
+                <Label fx:id="lblTitulo" text="Panel Catedrático"
+                       style="-fx-text-fill:#e8edf5;-fx-font-size:18px;-fx-font-weight:bold;"/>
+            </HBox>
+            <StackPane fx:id="contenedor" VBox.vgrow="ALWAYS"
+                       style="-fx-background-color:#0a0f1e;-fx-padding:20;"/>
+        </VBox>
+    </center>
+</BorderPane>

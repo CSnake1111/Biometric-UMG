@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="app.controladores.ArbolAsistenciasController"
+      spacing="0" style="-fx-background-color:#0e1628;">
+
+  <!-- Header -->
+  <HBox style="-fx-background-color:#1a2744;-fx-padding:14 20;-fx-alignment:CENTER_LEFT;-fx-spacing:16;">
+    <Label text="🌳 Árbol de Asistencias" style="-fx-text-fill:white;-fx-font-size:16px;-fx-font-weight:bold;"/>
+    <Region HBox.hgrow="ALWAYS"/>
+    <ComboBox fx:id="cmbCurso" prefWidth="340"
+              style="-fx-background-color:#1e3050;-fx-text-fill:#e8edf5;"/>
+  </HBox>
+
+  <!-- Stats bar -->
+  <HBox style="-fx-background-color:#152035;-fx-padding:10 20;-fx-alignment:CENTER_LEFT;-fx-spacing:20;">
+    <Label fx:id="lblInfoCurso" text="" style="-fx-text-fill:#8a9bbf;-fx-font-size:12px;"/>
+    <Region HBox.hgrow="ALWAYS"/>
+    <Label fx:id="lblPresentes" text="✅ Present: 0"
+           style="-fx-text-fill:#27ae60;-fx-font-weight:bold;-fx-font-size:12px;"/>
+    <Label fx:id="lblTardanzas" text="⏰ Late: 0"
+           style="-fx-text-fill:#f39c12;-fx-font-weight:bold;-fx-font-size:12px;"/>
+    <Label fx:id="lblAusentes" text="❌ Absent: 0"
+           style="-fx-text-fill:#e74c3c;-fx-font-weight:bold;-fx-font-size:12px;"/>
+    <ProgressIndicator fx:id="loading" prefWidth="22" prefHeight="22" visible="false" managed="false"/>
+  </HBox>
+
+  <!-- Contenido principal -->
+  <HBox VBox.vgrow="ALWAYS" spacing="0">
+
+    <!-- Árbol de estudiantes + Panel Manual (columna izquierda/centro) -->
+    <VBox HBox.hgrow="ALWAYS" spacing="0">
+
+      <!-- Árbol visual -->
+      <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true"
+                  style="-fx-background-color:#0e1628;-fx-background:#0e1628;">
+        <VBox fx:id="contenedorArbol" spacing="16" style="-fx-padding:20;-fx-alignment:TOP_CENTER;"/>
+      </ScrollPane>
+
+      <!-- Panel Asistencia Manual (desplegable) -->
+      <VBox fx:id="panelManual" visible="false" managed="false"
+            style="-fx-background-color:#111c30;-fx-border-color:#1e3050;-fx-border-width:1 0 0 0;"
+            maxHeight="280">
+        <HBox style="-fx-background-color:#152035;-fx-padding:8 16;-fx-alignment:CENTER_LEFT;-fx-spacing:10;">
+          <Label text="📋 Asistencia Manual — Estudiantes Inscritos"
+                 style="-fx-text-fill:#4fc3f7;-fx-font-size:13px;-fx-font-weight:bold;"/>
+          <Region HBox.hgrow="ALWAYS"/>
+          <Label text="Haz clic en Presente / Tarde / Ausente para cada estudiante"
+                 style="-fx-text-fill:#8a9bbf;-fx-font-size:11px;"/>
+        </HBox>
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                    style="-fx-background-color:#111c30;-fx-background:#111c30;" maxHeight="220">
+          <VBox fx:id="listaManual" spacing="5" style="-fx-padding:8 12;"/>
+        </ScrollPane>
+      </VBox>
+
+    </VBox>
+
+    <!-- Panel biométrico lateral -->
+    <VBox fx:id="panelBiometrico" visible="false" managed="false"
+          spacing="12" minWidth="300" maxWidth="310"
+          style="-fx-background-color:#111827;-fx-padding:16;-fx-border-color:#1e2d47;-fx-border-width:0 0 0 1;">
+
+      <Label text="📷 Toma de Asistencia Biométrica"
+             style="-fx-text-fill:#4fc3f7;-fx-font-size:13px;-fx-font-weight:bold;"/>
+      <Label fx:id="lblEstadoBio" text="Cámara inactiva"
+             style="-fx-text-fill:#8a9bbf;-fx-font-size:11px;" wrapText="true"/>
+
+      <!-- Preview cámara -->
+      <StackPane style="-fx-background-color:#000;-fx-background-radius:8;" prefHeight="200">
+        <ImageView fx:id="imgCamaraBio" fitWidth="278" fitHeight="196" preserveRatio="true"/>
+      </StackPane>
+
+      <!-- Panel identificado -->
+      <VBox fx:id="panelIdentificado" visible="false" managed="false"
+            alignment="CENTER" spacing="8"
+            style="-fx-background-color:rgba(39,174,96,0.12);-fx-background-radius:10;
+                   -fx-border-color:rgba(39,174,96,0.4);-fx-border-radius:10;-fx-padding:14;">
+        <ImageView fx:id="imgPersonaBio" fitWidth="72" fitHeight="72" preserveRatio="true"/>
+        <Label fx:id="lblNombreBio" text=""
+               style="-fx-text-fill:#27ae60;-fx-font-size:14px;-fx-font-weight:bold;"
+               wrapText="true" maxWidth="260"/>
+        <Label fx:id="lblEstadoAsistencia" text=""
+               style="-fx-text-fill:#4fc3f7;-fx-font-size:11px;" wrapText="true"/>
+      </VBox>
+
+      <Label text="El sistema detecta automáticamente el rostro del estudiante y registra su asistencia."
+             style="-fx-text-fill:rgba(255,255,255,0.4);-fx-font-size:10px;" wrapText="true"/>
+    </VBox>
+  </HBox>
+
+  <!-- Barra de acciones -->
+  <HBox style="-fx-background-color:#152035;-fx-padding:12 20;-fx-alignment:CENTER_LEFT;-fx-spacing:10;">
+
+    <!-- Biométrico -->
+    <Button fx:id="btnIniciarBio" text="📷 Iniciar Cámara" onAction="#iniciarBiometrico"
+            style="-fx-background-color:rgba(79,195,247,0.15);-fx-border-color:rgba(79,195,247,0.4);
+                   -fx-border-radius:6;-fx-background-radius:6;-fx-text-fill:#4fc3f7;
+                   -fx-font-weight:bold;-fx-padding:9 16;-fx-cursor:hand;"/>
+    <Button fx:id="btnDetenerBio" text="⏹ Detener" onAction="#detenerBiometrico" disable="true"
+            style="-fx-background-color:rgba(107,114,128,0.2);-fx-border-color:rgba(107,114,128,0.35);
+                   -fx-border-radius:6;-fx-background-radius:6;-fx-text-fill:#9ca3af;
+                   -fx-font-size:12px;-fx-padding:9 14;-fx-cursor:hand;"/>
+
+    <Separator orientation="VERTICAL" style="-fx-opacity:0.3;"/>
+
+    <!-- Asistencia Manual TOGGLE -->
+    <Button text="📋 Asistencia Manual" onAction="#togglePanelManual"
+            style="-fx-background-color:rgba(139,92,246,0.2);-fx-border-color:rgba(139,92,246,0.5);
+                   -fx-border-radius:6;-fx-background-radius:6;-fx-text-fill:#a78bfa;
+                   -fx-font-weight:bold;-fx-padding:9 16;-fx-cursor:hand;"/>
+
+    <Separator orientation="VERTICAL" style="-fx-opacity:0.3;"/>
+
+    <!-- Confirmar + PDF -->
+    <Button fx:id="btnConfirmar" text="✅ Confirmar Asistencia" onAction="#confirmarAsistencia"
+            style="-fx-background-color:#1a4f8c;-fx-text-fill:white;-fx-font-weight:bold;
+                   -fx-padding:9 18;-fx-background-radius:6;-fx-cursor:hand;"/>
+    <Button fx:id="btnPDF" text="📄 Generar PDF" onAction="#generarPDF"
+            style="-fx-background-color:#27ae60;-fx-text-fill:white;-fx-font-weight:bold;
+                   -fx-padding:9 18;-fx-background-radius:6;-fx-cursor:hand;"/>
+
+    <Region HBox.hgrow="ALWAYS"/>
+
+    <!-- Leyenda -->
+    <HBox spacing="12" alignment="CENTER">
+      <HBox spacing="4" alignment="CENTER_LEFT">
+        <Rectangle width="14" height="14" arcWidth="4" arcHeight="4" fill="#27ae60"/>
+        <Label text="Present" style="-fx-text-fill:#8a9bbf;-fx-font-size:11px;"/>
+      </HBox>
+      <HBox spacing="4" alignment="CENTER_LEFT">
+        <Rectangle width="14" height="14" arcWidth="4" arcHeight="4" fill="#f39c12"/>
+        <Label text="Late" style="-fx-text-fill:#8a9bbf;-fx-font-size:11px;"/>
+      </HBox>
+      <HBox spacing="4" alignment="CENTER_LEFT">
+        <Rectangle width="14" height="14" arcWidth="4" arcHeight="4" fill="#e74c3c"/>
+        <Label text="Absent" style="-fx-text-fill:#8a9bbf;-fx-font-size:11px;"/>
+      </HBox>
+    </HBox>
+
+    <Label fx:id="lblEstado" text=""
+           style="-fx-text-fill:#8a9bbf;-fx-font-size:12px;" wrapText="true" maxWidth="220"/>
+  </HBox>
+</VBox>

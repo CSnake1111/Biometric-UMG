@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import java.time.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="app.controladores.ReportesPuertaController"
+      spacing="15" style="-fx-padding:20;-fx-background-color:#0d1224;">
+
+    <Label text="📊  Reportes de Ingresos — Puerta Principal"
+           style="-fx-text-fill:#4fc3f7;-fx-font-size:18px;-fx-font-weight:bold;"/>
+
+    <!-- Filtros -->
+    <HBox spacing="15" alignment="CENTER_LEFT"
+          style="-fx-background-color:#111827;-fx-background-radius:10;-fx-padding:16;">
+        <VBox spacing="4">
+            <Label text="Instalación" style="-fx-text-fill:rgba(255,255,255,0.6);-fx-font-size:11px;"/>
+            <ComboBox fx:id="cmbInstalacion" prefWidth="180"
+                      promptText="Seleccionar..." onAction="#cargarPuertas"/>
+        </VBox>
+        <VBox spacing="4">
+            <Label text="Puerta de Acceso" style="-fx-text-fill:rgba(255,255,255,0.6);-fx-font-size:11px;"/>
+            <ComboBox fx:id="cmbPuerta" prefWidth="160" promptText="Seleccionar..."/>
+        </VBox>
+        <VBox spacing="4">
+            <Label text="Fecha" style="-fx-text-fill:rgba(255,255,255,0.6);-fx-font-size:11px;"/>
+            <DatePicker fx:id="dpFecha" prefWidth="150"/>
+        </VBox>
+        <VBox spacing="4">
+            <Label text="Ordenar" style="-fx-text-fill:rgba(255,255,255,0.6);-fx-font-size:11px;"/>
+            <ComboBox fx:id="cmbOrden" prefWidth="130"
+                      promptText="Ascendente"/>
+        </VBox>
+        <VBox spacing="4">
+            <Label text=" " style="-fx-font-size:11px;"/>
+            <HBox spacing="8">
+                <Button text="🌳  Ver Histórico" styleClass="btn-primario"
+                        onAction="#generarReporteHistorico"/>
+                <Button text="📅  Ver por Fecha" styleClass="btn-secundario"
+                        onAction="#generarReporteFecha"/>
+                <Button text="📄  Exportar PDF" styleClass="btn-secundario"
+                        onAction="#exportarPDF"/>
+            </HBox>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <ProgressIndicator fx:id="loadingReporte" prefWidth="24" prefHeight="24"
+                           visible="false" style="-fx-progress-color:#4fc3f7;"/>
+    </HBox>
+
+    <!-- Título y contador del reporte -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label fx:id="lblTituloArbol" text="Selecciona una instalación y puerta para generar el reporte"
+               style="-fx-text-fill:rgba(255,255,255,0.5);-fx-font-size:13px;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="lblTotalNodos" text=""
+               style="-fx-text-fill:#4fc3f7;-fx-font-size:12px;"/>
+    </HBox>
+
+    <!-- Tabs de reporte -->
+    <TabPane fx:id="tabsReporte" VBox.vgrow="ALWAYS">
+        <Tab text="🌳  Árbol de Ingresos" closable="false">
+            <ScrollPane fitToWidth="true" fitToHeight="true"
+                        style="-fx-background-color:transparent;-fx-background:transparent;">
+                <VBox fx:id="contenedorArbol" spacing="8" style="-fx-padding:20;">
+                    <Label text="Genera un reporte para ver el árbol de asistencia"
+                           style="-fx-text-fill:rgba(255,255,255,0.3);-fx-font-size:13px;"/>
+                </VBox>
+            </ScrollPane>
+        </Tab>
+        <Tab text="📋  Lista de Ingresos" closable="false">
+            <VBox spacing="10" style="-fx-padding:15;">
+                <Label text="Los registros aparecerán aquí al generar el reporte por fecha"
+                       style="-fx-text-fill:rgba(255,255,255,0.3);-fx-font-size:12px;"/>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>

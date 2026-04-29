@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="app.controladores.HistorialAsistenciasController"
+      spacing="0" style="-fx-background-color:#0e1628;">
+
+  <!-- Header -->
+  <HBox style="-fx-background-color:#1a2744;-fx-padding:14 20;-fx-alignment:CENTER_LEFT;-fx-spacing:16;">
+    <Label text="📊 Historial de Asistencias" style="-fx-text-fill:white;-fx-font-size:16px;-fx-font-weight:bold;"/>
+    <Region HBox.hgrow="ALWAYS"/>
+    <ComboBox fx:id="cmbCurso" prefWidth="320"
+              style="-fx-background-color:#1e3050;-fx-text-fill:#e8edf5;"
+              promptText="Selecciona un curso..."/>
+  </HBox>
+
+  <!-- Selector de fecha + stats globales -->
+  <HBox style="-fx-background-color:#111c30;-fx-padding:12 20;-fx-alignment:CENTER_LEFT;-fx-spacing:16;">
+    <Label text="📅 Ver fecha:" style="-fx-text-fill:#8a9bbf;-fx-font-size:12px;"/>
+    <DatePicker fx:id="datePicker"
+                style="-fx-background-color:#1e3050;-fx-text-fill:white;"
+                prefWidth="160"/>
+    <Button text="🔍 Ver día" onAction="#verDia"
+            style="-fx-background-color:#1a4f8c;-fx-text-fill:white;-fx-font-weight:bold;
+                   -fx-padding:7 16;-fx-background-radius:6;-fx-cursor:hand;"/>
+    <Separator orientation="VERTICAL" style="-fx-opacity:0.3;"/>
+    <Label text="Resumen total del curso:" style="-fx-text-fill:#8a9bbf;-fx-font-size:12px;"/>
+    <Label fx:id="lblTotalClases" text="0 clases"
+           style="-fx-text-fill:#4fc3f7;-fx-font-weight:bold;-fx-font-size:12px;"/>
+    <Region HBox.hgrow="ALWAYS"/>
+    <ProgressIndicator fx:id="loading" prefWidth="22" prefHeight="22" visible="false" managed="false"/>
+  </HBox>
+
+  <!-- Cuerpo: tabla de fechas (izquierda) + tabla de estudiantes (derecha) -->
+  <HBox VBox.vgrow="ALWAYS" spacing="1" style="-fx-background-color:#0a1020;">
+
+    <!-- PANEL IZQUIERDO: calendario de fechas con clases -->
+    <VBox minWidth="220" maxWidth="240"
+          style="-fx-background-color:#0e1628;-fx-border-color:#1e2d47;-fx-border-width:0 1 0 0;">
+      <HBox style="-fx-background-color:#152035;-fx-padding:10 14;-fx-alignment:CENTER_LEFT;">
+        <Label text="📆 Clases registradas" style="-fx-text-fill:#4fc3f7;-fx-font-size:12px;-fx-font-weight:bold;"/>
+      </HBox>
+      <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                  style="-fx-background-color:#0e1628;-fx-background:#0e1628;">
+        <VBox fx:id="listaFechas" spacing="2" style="-fx-padding:8;"/>
+      </ScrollPane>
+    </VBox>
+
+    <!-- PANEL DERECHO: contenido dinámico (detalle de día ó resumen por estudiante) -->
+    <VBox HBox.hgrow="ALWAYS" spacing="0">
+
+      <!-- Tabs: Detalle del día / Resumen por estudiante -->
+      <HBox style="-fx-background-color:#152035;-fx-padding:0 20;-fx-spacing:0;">
+        <Button fx:id="btnTabDia" text="📋 Detalle del día" onAction="#mostrarTabDia"
+                style="-fx-background-color:rgba(79,195,247,0.15);-fx-border-color:transparent transparent #4fc3f7 transparent;
+                       -fx-border-width:0 0 2 0;-fx-text-fill:#4fc3f7;-fx-font-weight:bold;
+                       -fx-padding:11 20;-fx-background-radius:0;-fx-cursor:hand;"/>
+        <Button fx:id="btnTabResumen" text="📈 Resumen por estudiante" onAction="#mostrarTabResumen"
+                style="-fx-background-color:transparent;-fx-border-color:transparent;
+                       -fx-text-fill:#8a9bbf;-fx-font-size:12px;
+                       -fx-padding:11 20;-fx-background-radius:0;-fx-cursor:hand;"/>
+      </HBox>
+
+      <!-- Tab Detalle del día -->
+      <VBox fx:id="tabDia" VBox.vgrow="ALWAYS" spacing="0">
+        <HBox style="-fx-background-color:#111c30;-fx-padding:8 20;-fx-alignment:CENTER_LEFT;-fx-spacing:20;">
+          <Label fx:id="lblFechaDia" text="Selecciona una fecha o usa el selector"
+                 style="-fx-text-fill:#8a9bbf;-fx-font-size:12px;"/>
+          <Region HBox.hgrow="ALWAYS"/>
+          <Label fx:id="lblStatsDia" text=""
+                 style="-fx-text-fill:#4fc3f7;-fx-font-size:11px;"/>
+        </HBox>
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                    style="-fx-background-color:#0e1628;-fx-background:#0e1628;">
+          <VBox fx:id="contenedorDia" spacing="4" style="-fx-padding:16;"/>
+        </ScrollPane>
+      </VBox>
+
+      <!-- Tab Resumen por estudiante -->
+      <VBox fx:id="tabResumen" VBox.vgrow="ALWAYS" spacing="0" visible="false" managed="false">
+        <HBox style="-fx-background-color:#111c30;-fx-padding:8 20;-fx-alignment:CENTER_LEFT;-fx-spacing:20;">
+          <Label text="Porcentaje de asistencia por estudiante (todas las fechas del curso)"
+                 style="-fx-text-fill:#8a9bbf;-fx-font-size:12px;"/>
+        </HBox>
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                    style="-fx-background-color:#0e1628;-fx-background:#0e1628;">
+          <VBox fx:id="contenedorResumen" spacing="6" style="-fx-padding:16;"/>
+        </ScrollPane>
+      </VBox>
+
+    </VBox>
+  </HBox>
+
+  <!-- Status bar -->
+  <HBox style="-fx-background-color:#152035;-fx-padding:8 20;-fx-alignment:CENTER_LEFT;">
+    <Label fx:id="lblEstado" text="" style="-fx-text-fill:#8a9bbf;-fx-font-size:11px;"/>
+  </HBox>
+</VBox>

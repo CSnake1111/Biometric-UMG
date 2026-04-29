@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="app.controladores.EntrenamientoController"
+      spacing="20" style="-fx-padding:25;-fx-background-color:#0d1224;">
+
+    <Label text="🧠  Entrenamiento del Modelo Facial"
+           style="-fx-text-fill:#4fc3f7;-fx-font-size:18px;-fx-font-weight:bold;"/>
+
+    <!-- Estado del sistema -->
+    <HBox spacing="15">
+        <VBox HBox.hgrow="ALWAYS" spacing="8"
+              style="-fx-background-color:#111827;-fx-background-radius:10;-fx-padding:18;">
+            <Label text="Estado OpenCV" style="-fx-text-fill:rgba(255,255,255,0.5);-fx-font-size:11px;"/>
+            <Label fx:id="lblEstadoOpenCV" text="Verificando..."
+                   style="-fx-text-fill:#f39c12;-fx-font-size:13px;-fx-font-weight:bold;"/>
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS" spacing="8"
+              style="-fx-background-color:#111827;-fx-background-radius:10;-fx-padding:18;">
+            <Label text="Personas Enroladas" style="-fx-text-fill:rgba(255,255,255,0.5);-fx-font-size:11px;"/>
+            <Label fx:id="lblPersonasEnroladas" text="0"
+                   style="-fx-text-fill:#4fc3f7;-fx-font-size:22px;-fx-font-weight:bold;"/>
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS" spacing="8"
+              style="-fx-background-color:#111827;-fx-background-radius:10;-fx-padding:18;">
+            <Label text="Modelo Entrenado" style="-fx-text-fill:rgba(255,255,255,0.5);-fx-font-size:11px;"/>
+            <Label fx:id="lblModeloExiste" text="No disponible"
+                   style="-fx-text-fill:#e74c3c;-fx-font-size:13px;-fx-font-weight:bold;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Panel de entrenamiento -->
+    <VBox spacing="15" VBox.vgrow="ALWAYS"
+          style="-fx-background-color:#111827;-fx-background-radius:12;-fx-padding:24;">
+        <Label text="Iniciar Entrenamiento"
+               style="-fx-text-fill:#e8edf5;-fx-font-size:14px;-fx-font-weight:bold;"/>
+        <Label text="El entrenamiento procesará todas las fotos enroladas para generar el modelo de reconocimiento facial. Este proceso puede tomar varios minutos."
+               wrapText="true"
+               style="-fx-text-fill:rgba(255,255,255,0.5);-fx-font-size:12px;"/>
+
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Button fx:id="btnEntrenar" text="▶  Iniciar Entrenamiento"
+                    styleClass="btn-primario" onAction="#iniciarEntrenamiento"/>
+            <Button text="🔄  Actualizar Estado"
+                    styleClass="btn-secundario" onAction="#actualizarEstadoBtn"/>
+        </HBox>
+
+        <Label text="Progreso:" style="-fx-text-fill:rgba(255,255,255,0.6);-fx-font-size:12px;"/>
+        <ProgressBar fx:id="progEntrenamiento" progress="0"
+                     maxWidth="1.7976931348623157E308" prefHeight="12"
+                     style="-fx-accent:#27ae60;"/>
+        <Label fx:id="lblEstadoEntrenamiento" text="Esperando..."
+               style="-fx-text-fill:rgba(255,255,255,0.5);-fx-font-size:12px;" wrapText="true"/>
+
+        <Separator style="-fx-opacity:0.3;"/>
+
+        <Label text="Log del proceso:" style="-fx-text-fill:rgba(255,255,255,0.6);-fx-font-size:12px;"/>
+        <TextArea fx:id="txtLog" editable="false" VBox.vgrow="ALWAYS"
+                  prefHeight="200"
+                  style="-fx-control-inner-background:#0a0f1e;-fx-text-fill:#4fc3f7;
+                         -fx-font-family:monospace;-fx-font-size:11px;
+                         -fx-background-color:transparent;"/>
+    </VBox>
+</VBox>

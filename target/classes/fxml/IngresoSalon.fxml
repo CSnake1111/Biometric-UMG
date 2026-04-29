@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="app.controladores.IngresoSalonController"
+      spacing="15" style="-fx-padding:20;-fx-background-color:#0d1224;">
+
+    <Label text="🏫  Ingreso por Salón de Clases — Proceso 3"
+           style="-fx-text-fill:#4fc3f7;-fx-font-size:18px;-fx-font-weight:bold;"/>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+
+        <!-- Panel cámara izquierdo -->
+        <VBox spacing="12" minWidth="360" maxWidth="380"
+              style="-fx-background-color:#111827;-fx-background-radius:12;-fx-padding:18;">
+
+            <!-- Selector de ubicación -->
+            <Label text="📍  Ubicación del Salón"
+                   style="-fx-text-fill:#4fc3f7;-fx-font-size:13px;-fx-font-weight:bold;"/>
+            <VBox spacing="6">
+                <Label text="Instalación" style="-fx-text-fill:rgba(255,255,255,0.6);-fx-font-size:11px;"/>
+                <ComboBox fx:id="cmbInstalacion" maxWidth="1.7976931348623157E308"
+                          promptText="Seleccionar instalación..." onAction="#cargarNiveles"/>
+            </VBox>
+            <VBox spacing="6">
+                <Label text="Nivel" style="-fx-text-fill:rgba(255,255,255,0.6);-fx-font-size:11px;"/>
+                <ComboBox fx:id="cmbNivel" maxWidth="1.7976931348623157E308"
+                          promptText="Seleccionar nivel..." onAction="#cargarSalones"/>
+            </VBox>
+            <VBox spacing="6">
+                <Label text="Salón" style="-fx-text-fill:rgba(255,255,255,0.6);-fx-font-size:11px;"/>
+                <ComboBox fx:id="cmbSalon" maxWidth="1.7976931348623157E308"
+                          promptText="Seleccionar salón..."/>
+            </VBox>
+
+            <Separator style="-fx-opacity:0.3;"/>
+
+            <!-- Cámara -->
+            <Label text="📷  Vista de Cámara"
+                   style="-fx-text-fill:#4fc3f7;-fx-font-size:13px;-fx-font-weight:bold;"/>
+
+            <Label fx:id="lblCamaraUtilizar"
+                   text="📷  Cámara a utilizar:"
+                   style="-fx-text-fill: #8a9bbf; -fx-font-size: 11px;"/>
+            <ComboBox fx:id="cmbCamara"
+                      promptText="Seleccionando cámaras..."
+                      maxWidth="1.7976931348623157E308"
+                      style="-fx-background-color:#0d1829;-fx-text-fill:#e8edf5;
+                 -fx-border-color:#1e2d47;-fx-border-radius:6;
+                 -fx-background-radius:6;"/>
+
+            <StackPane style="-fx-background-color:#000;-fx-background-radius:8;" prefHeight="210">
+                <ImageView fx:id="imgCamara" fitWidth="340" fitHeight="200" preserveRatio="true"/>
+                <VBox fx:id="panelSinCamara" alignment="CENTER" spacing="8">
+                    <Label text="📵" style="-fx-font-size:32px;"/>
+                    <Label text="Cámara inactiva" style="-fx-text-fill:rgba(255,255,255,0.4);-fx-font-size:12px;"/>
+                </VBox>
+                <HBox alignment="BOTTOM_LEFT" style="-fx-padding:8;">
+                    <Circle fx:id="indicadorEstado" radius="6" fill="#e74c3c"/>
+                    <Label fx:id="lblEstadoCamara" text="  Inactiva"
+                           style="-fx-text-fill:rgba(255,255,255,0.6);-fx-font-size:10px;"/>
+                </HBox>
+            </StackPane>
+
+            <HBox spacing="10">
+                <Button fx:id="btnIniciarCamara" text="▶  Iniciar"
+                        styleClass="btn-primario" HBox.hgrow="ALWAYS"
+                        maxWidth="1.7976931348623157E308" onAction="#iniciarReconocimiento"/>
+                <Button fx:id="btnDetenerCamara" text="⏹  Detener"
+                        styleClass="btn-secundario" disable="true"
+                        onAction="#detenerReconocimiento"/>
+            </HBox>
+        </VBox>
+
+        <!-- Panel derecho: estados + tabla -->
+        <VBox spacing="12" HBox.hgrow="ALWAYS">
+
+            <!-- Paneles de estado -->
+            <VBox fx:id="panelEsperando" alignment="CENTER" spacing="8"
+                  style="-fx-background-color:#111827;-fx-background-radius:10;-fx-padding:20;" minHeight="120">
+                <Label text="⏳" style="-fx-font-size:32px;"/>
+                <Label text="Esperando inicio de cámara..."
+                       style="-fx-text-fill:rgba(255,255,255,0.5);-fx-font-size:13px;"/>
+            </VBox>
+
+            <VBox fx:id="panelReconociendo" visible="false" managed="false"
+                  alignment="CENTER" spacing="8"
+                  style="-fx-background-color:rgba(79,195,247,0.08);-fx-background-radius:10;
+                         -fx-border-color:rgba(79,195,247,0.2);-fx-border-radius:10;-fx-padding:20;" minHeight="120">
+                <Label text="👁" style="-fx-font-size:32px;"/>
+                <Label text="Analizando rostro..."
+                       style="-fx-text-fill:#4fc3f7;-fx-font-size:13px;"/>
+            </VBox>
+
+            <VBox fx:id="panelIdentificado" visible="false" managed="false"
+                  alignment="CENTER" spacing="10"
+                  style="-fx-background-color:rgba(39,174,96,0.1);-fx-background-radius:10;
+                         -fx-border-color:rgba(39,174,96,0.3);-fx-border-radius:10;-fx-padding:20;" minHeight="120">
+                <ImageView fx:id="imgPersonaId" fitWidth="80" fitHeight="80" preserveRatio="true"
+                           style="-fx-effect:dropshadow(gaussian,rgba(39,174,96,0.5),10,0,0,0);"/>
+                <Label fx:id="lblNombreId" text=""
+                       style="-fx-text-fill:#27ae60;-fx-font-size:16px;-fx-font-weight:bold;"/>
+                <Label fx:id="lblTipoId" text=""
+                       style="-fx-text-fill:rgba(255,255,255,0.6);-fx-font-size:12px;"/>
+                <Label fx:id="lblHoraIngreso" text=""
+                       style="-fx-text-fill:#4fc3f7;-fx-font-size:11px;"/>
+            </VBox>
+
+            <VBox fx:id="panelNoReconocido" visible="false" managed="false"
+                  alignment="CENTER" spacing="8"
+                  style="-fx-background-color:rgba(231,76,60,0.1);-fx-background-radius:10;
+                         -fx-border-color:rgba(231,76,60,0.3);-fx-border-radius:10;-fx-padding:20;" minHeight="120">
+                <Label text="⚠" style="-fx-font-size:32px;"/>
+                <Label text="Persona no reconocida"
+                       style="-fx-text-fill:#e74c3c;-fx-font-size:13px;-fx-font-weight:bold;"/>
+            </VBox>
+
+            <!-- Panel no reconocido: asistencia manual -->
+            <VBox fx:id="panelAsistenciaManual" spacing="8" managed="false" visible="false"
+                  style="-fx-background-color:rgba(243,156,18,0.08);-fx-background-radius:10;
+                         -fx-border-color:rgba(243,156,18,0.35);-fx-border-radius:10;-fx-padding:14;">
+                <Label text="✏  Asistencia Manual"
+                       style="-fx-text-fill:#f39c12;-fx-font-size:13px;-fx-font-weight:bold;"/>
+                <Label text="El biométrico no pudo identificar al estudiante. Selecciónalo manualmente:"
+                       style="-fx-text-fill:rgba(255,255,255,0.55);-fx-font-size:11px;" wrapText="true"/>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <ComboBox fx:id="cmbEstudianteManual" HBox.hgrow="ALWAYS"
+                              maxWidth="1.7976931348623157E308"
+                              promptText="Seleccionar estudiante del curso..."/>
+                    <Button text="✅ Registrar" onAction="#registrarAsistenciaManual"
+                            style="-fx-background-color:rgba(243,156,18,0.85);-fx-background-radius:8;
+                                   -fx-border-radius:8;-fx-text-fill:white;-fx-font-size:12px;
+                                   -fx-font-weight:bold;-fx-padding:7 14;-fx-cursor:hand;-fx-min-width:110;"/>
+                </HBox>
+                <Label fx:id="lblMensajeManual" text="" wrapText="true"
+                       style="-fx-text-fill:#4fc3f7;-fx-font-size:11px;"/>
+            </VBox>
+
+            <!-- Tabla de ingresos del día -->
+            <VBox spacing="8" VBox.vgrow="ALWAYS"
+                  style="-fx-background-color:#111827;-fx-background-radius:12;-fx-padding:16;">
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="📋  Ingresos al Salón — Hoy"
+                           style="-fx-text-fill:#e8edf5;-fx-font-size:13px;-fx-font-weight:bold;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="lblContadorSalon" text="0 ingresos"
+                           style="-fx-text-fill:#4fc3f7;-fx-font-size:11px;"/>
+                </HBox>
+                <TableView fx:id="tablaIngresos" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colNombreSalon" text="Nombre" prefWidth="200"/>
+                        <TableColumn fx:id="colTipoSalon"   text="Tipo"   prefWidth="100"/>
+                        <TableColumn fx:id="colHoraSalon"   text="Hora"   prefWidth="80"/>
+                        <TableColumn fx:id="colModoSalon"   text="Modo"   prefWidth="90"/>
+                    </columns>
+                    <placeholder><Label text="Sin ingresos registrados hoy"
+                                        style="-fx-text-fill:rgba(255,255,255,0.3);"/></placeholder>
+                </TableView>
+            </VBox>
+        </VBox>
+    </HBox>
+</VBox>

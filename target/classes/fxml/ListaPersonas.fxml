@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<HBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="app.controladores.ListaPersonasController"
+      spacing="20" style="-fx-padding: 5;">
+
+    <!-- Tabla principal -->
+    <VBox spacing="12" HBox.hgrow="ALWAYS">
+        <VBox styleClass="card" spacing="10">
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="txtBuscar" promptText="🔍 Buscar por nombre, carné o correo..."
+                           styleClass="text-field" HBox.hgrow="ALWAYS" maxWidth="350"/>
+                <ComboBox fx:id="cmbFiltroTipo" prefWidth="170"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblTotal" text="0 personas"
+                       style="-fx-text-fill: #4a5a78; -fx-font-size: 12px;"/>
+                <Button text="🔄" styleClass="btn-icono" onAction="#actualizarLista"/>
+                <Button text="🚫 Desactivar" styleClass="btn-peligro"
+                        style="-fx-padding: 8 14 8 14;" onAction="#desactivarPersona"/>
+            </HBox>
+        </VBox>
+
+        <TableView fx:id="tablaPersonas" styleClass="table-view" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colId"      text="ID"      prefWidth="50"/>
+                <TableColumn fx:id="colNombre"  text="Nombre"  prefWidth="200"/>
+                <TableColumn fx:id="colCarne"   text="Carné"   prefWidth="130"/>
+                <TableColumn fx:id="colTipo"    text="Tipo"    prefWidth="110"/>
+                <TableColumn fx:id="colCarrera" text="Carrera" prefWidth="180"/>
+                <TableColumn fx:id="colCorreo"  text="Correo"  prefWidth="200"/>
+                <TableColumn fx:id="colEstado"  text="Estado"  prefWidth="90"/>
+            </columns>
+            <placeholder>
+                <Label text="No hay personas registradas" style="-fx-text-fill: #4a5a78;"/>
+            </placeholder>
+        </TableView>
+    </VBox>
+
+    <!-- Panel de detalle -->
+    <VBox styleClass="card" spacing="10" minWidth="220" maxWidth="220" alignment="TOP_CENTER">
+        <Label text="👤 Detalle"
+               style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #e8edf5;"/>
+
+        <StackPane minWidth="160" minHeight="160" maxWidth="160" maxHeight="160"
+                   style="-fx-background-color: #0d1829; -fx-background-radius: 80;
+                           -fx-border-color: #1e2d47; -fx-border-radius: 80; -fx-border-width: 2;">
+            <ImageView fx:id="imgDetalle" fitWidth="158" fitHeight="158" preserveRatio="false"/>
+        </StackPane>
+
+        <Label fx:id="lblNombreDetalle" text="—"
+               style="-fx-text-fill: #e8edf5; -fx-font-weight: bold; -fx-font-size: 13px;"
+               wrapText="true" textAlignment="CENTER"/>
+        <Label fx:id="lblCorreoDetalle" text="—"
+               style="-fx-text-fill: #4a5a78; -fx-font-size: 10px;" wrapText="true"/>
+        <Label fx:id="lblTipoDetalle" text="—"
+               style="-fx-text-fill: #8a9bbf; -fx-font-size: 11px;"/>
+        <Label fx:id="lblCarreraDetalle" text="—"
+               style="-fx-text-fill: #4a5a78; -fx-font-size: 10px;" wrapText="true"/>
+        <Label fx:id="lblFechaDetalle" text="—"
+               style="-fx-text-fill: #2a3a5a; -fx-font-size: 10px;"/>
+
+        <!-- Separador -->
+        <Region minHeight="1" maxHeight="1" maxWidth="180"
+                style="-fx-background-color: #1e2d47;"/>
+
+        <!-- Botones de carné -->
+        <Label text="CARNET"
+               style="-fx-text-fill: #4a5a78; -fx-font-size: 9px; -fx-font-weight: bold;"/>
+
+        <Button text="📄 Ver Carnet"
+                maxWidth="190"
+                styleClass="btn-exito"
+                style="-fx-font-size: 11px; -fx-padding: 7 10 7 10;"
+                onAction="#verCarnet"/>
+
+        <Button text="📧 Reenviar por Correo"
+                maxWidth="190"
+                styleClass="btn-primario"
+                style="-fx-font-size: 11px; -fx-padding: 7 10 7 10;"
+                onAction="#reenviarCorreo"/>
+
+        <Button text="📱 Enviar WhatsApp"
+                maxWidth="190"
+                styleClass="btn-exito"
+                style="-fx-font-size: 11px; -fx-padding: 7 10 7 10;
+                       -fx-background-color: #25D366;"
+                onAction="#enviarWhatsApp"/>
+
+        <Button text="🔄 Regenerar Carnet"
+                maxWidth="190"
+                styleClass="btn-contorno"
+                style="-fx-font-size: 11px; -fx-padding: 7 10 7 10;"
+                onAction="#regenerarCarnet"/>
+
+        <Button text="📷 Actualizar Foto"
+                maxWidth="190"
+                styleClass="btn-contorno"
+                style="-fx-font-size: 11px; -fx-padding: 7 10 7 10; -fx-border-color: #27ae60; -fx-text-fill: #27ae60;"
+                onAction="#actualizarFoto"/>
+
+        <Region minHeight="1" maxHeight="1" maxWidth="180"
+                style="-fx-background-color: #1e2d47;"/>
+
+        <Label text="BIOMETRÍA"
+               style="-fx-text-fill: #4a5a78; -fx-font-size: 9px; -fx-font-weight: bold;"/>
+
+        <Button text="🧠 Re-enrolar Rostro"
+                maxWidth="190"
+                styleClass="btn-primario"
+                style="-fx-font-size: 11px; -fx-padding: 7 10 7 10;
+                       -fx-background-color: #0a3d6b;"
+                onAction="#reenrolarRostro"/>
+    </VBox>
+
+    <Button text="📧 Envío Masivo" styleClass="btn-primario"
+            style="-fx-padding: 8 14 8 14;" onAction="#enviarMasivo"/>
+    <Button text="✏️ Editar Datos"
+            maxWidth="190"
+            styleClass="btn-primario"
+            style="-fx-font-size: 11px; -fx-padding: 7 10 7 10;"
+            onAction="#editarPersona"/>
+
+</HBox>

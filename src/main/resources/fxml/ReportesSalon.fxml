@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="app.controladores.ReportesSalonController"
+      spacing="15" style="-fx-padding: 5;">
+
+    <VBox styleClass="card" spacing="12">
+        <Label text="🏛 Reportes por Salón de Clase"
+               style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #e8edf5;"/>
+
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <VBox spacing="5">
+                <Label text="INSTALACIÓN" styleClass="etiqueta-campo"/>
+                <ComboBox fx:id="cmbInstalacion" prefWidth="180" promptText="Seleccionar..."/>
+            </VBox>
+            <VBox spacing="5">
+                <Label text="NIVEL" styleClass="etiqueta-campo"/>
+                <ComboBox fx:id="cmbNivel" prefWidth="140" promptText="Nivel..."/>
+            </VBox>
+            <VBox spacing="5">
+                <Label text="SALÓN" styleClass="etiqueta-campo"/>
+                <ComboBox fx:id="cmbSalon" prefWidth="200" promptText="Salón..."/>
+            </VBox>
+            <VBox spacing="5">
+                <Label text="FECHA (para reporte por día)" styleClass="etiqueta-campo"/>
+                <DatePicker fx:id="dpFecha" prefWidth="180"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="10">
+            <Button text="🌳 Árbol Histórico (todos los ingresos)"
+                    styleClass="btn-primario" onAction="#generarReporteHistorico"/>
+            <Button text="📅 Reporte por Fecha"
+                    styleClass="btn-exito" onAction="#generarReporteFecha"/>
+        </HBox>
+    </VBox>
+
+    <VBox styleClass="card" spacing="10" VBox.vgrow="ALWAYS">
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label fx:id="lblTituloArbol"
+                   text="Selecciona los filtros y genera un reporte"
+                   style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #e8edf5;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <ProgressIndicator fx:id="loadingReporte" maxWidth="20" maxHeight="20"
+                               visible="false" style="-fx-progress-color: #4080ff;"/>
+            <Label fx:id="lblTotalNodos" text=""
+                   style="-fx-text-fill: #4a5a78; -fx-font-size: 11px;"/>
+        </HBox>
+
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                    style="-fx-background: transparent; -fx-background-color: transparent;">
+            <VBox fx:id="contenedorArbol" spacing="5" style="-fx-padding: 5;"/>
+        </ScrollPane>
+    </VBox>
+
+</VBox>

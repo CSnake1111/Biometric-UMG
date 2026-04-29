@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="app.controladores.GestionUsuariosController"
+      spacing="0" style="-fx-padding:20;-fx-background-color:#0d1224;">
+
+    <!-- Encabezado -->
+    <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding:0 0 18 0;">
+        <Label text="👥  Gestión de Usuarios"
+               style="-fx-text-fill:#4fc3f7;-fx-font-size:18px;-fx-font-weight:bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <!-- Buscador -->
+        <TextField fx:id="txtBuscar" promptText="🔍  Buscar usuario o rol..."
+                   styleClass="campo-texto" prefWidth="240"
+                   style="-fx-font-size:12px;"/>
+        <Button text="🔄  Refrescar" styleClass="btn-secundario" onAction="#refrescar"/>
+    </HBox>
+
+    <!-- Contadores rápidos -->
+    <HBox spacing="12" style="-fx-padding:0 0 16 0;">
+        <VBox fx:id="cardTotal" spacing="2" alignment="CENTER"
+              style="-fx-background-color:#111827;-fx-background-radius:10;
+                     -fx-padding:12 22;-fx-border-color:rgba(79,195,247,0.2);-fx-border-radius:10;">
+            <Label fx:id="lblTotalCount" text="0"
+                   style="-fx-text-fill:#4fc3f7;-fx-font-size:22px;-fx-font-weight:bold;"/>
+            <Label text="Total" style="-fx-text-fill:rgba(255,255,255,0.5);-fx-font-size:11px;"/>
+        </VBox>
+        <VBox fx:id="cardActivos" spacing="2" alignment="CENTER"
+              style="-fx-background-color:#111827;-fx-background-radius:10;
+                     -fx-padding:12 22;-fx-border-color:rgba(39,174,96,0.2);-fx-border-radius:10;">
+            <Label fx:id="lblActivosCount" text="0"
+                   style="-fx-text-fill:#27ae60;-fx-font-size:22px;-fx-font-weight:bold;"/>
+            <Label text="Activos" style="-fx-text-fill:rgba(255,255,255,0.5);-fx-font-size:11px;"/>
+        </VBox>
+        <VBox fx:id="cardBloqueados" spacing="2" alignment="CENTER"
+              style="-fx-background-color:#111827;-fx-background-radius:10;
+                     -fx-padding:12 22;-fx-border-color:rgba(231,76,60,0.2);-fx-border-radius:10;">
+            <Label fx:id="lblBloqueadosCount" text="0"
+                   style="-fx-text-fill:#e74c3c;-fx-font-size:22px;-fx-font-weight:bold;"/>
+            <Label text="Bloqueados / Inactivos" style="-fx-text-fill:rgba(255,255,255,0.5);-fx-font-size:11px;"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <!-- Mensaje de feedback global -->
+        <Label fx:id="lblMensaje" text="" wrapText="true"
+               style="-fx-font-size:12px;-fx-font-weight:bold;" maxWidth="300"/>
+    </HBox>
+
+    <!-- Tabla principal -->
+    <VBox VBox.vgrow="ALWAYS"
+          style="-fx-background-color:#111827;-fx-background-radius:12;-fx-padding:16;">
+        <TableView fx:id="tablaUsuarios" VBox.vgrow="ALWAYS"
+                   style="-fx-background-color:transparent;-fx-border-color:transparent;">
+            <columns>
+                <TableColumn fx:id="colId"          text="ID"            prefWidth="50"/>
+                <TableColumn fx:id="colUsuario"     text="Usuario"       prefWidth="150"/>
+                <TableColumn fx:id="colNombreReal"  text="Nombre"        prefWidth="180"/>
+                <TableColumn fx:id="colRol"         text="Rol"           prefWidth="120"/>
+                <TableColumn fx:id="colIntentos"    text="Intentos"      prefWidth="75"/>
+                <TableColumn fx:id="colBloqueado"   text="Bloqueado hasta" prefWidth="140"/>
+                <TableColumn fx:id="colUltimoLogin" text="Último Login"  prefWidth="140"/>
+                <TableColumn fx:id="colEstado"      text="Estado"        prefWidth="90"/>
+                <TableColumn fx:id="colAcciones"    text="Acciones"      prefWidth="220"/>
+            </columns>
+            <placeholder>
+                <Label text="Sin usuarios registrados"
+                       style="-fx-text-fill:rgba(255,255,255,0.3);-fx-font-size:13px;"/>
+            </placeholder>
+        </TableView>
+    </VBox>
+
+</VBox>

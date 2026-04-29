@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="app.controladores.CambiarPass"
+      spacing="18" style="-fx-padding:20;">
+
+    <!-- Título -->
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Label text="🔑" style="-fx-font-size:24px;"/>
+        <VBox spacing="2">
+            <Label fx:id="lblTitulo" text="Cambiar Contraseña"
+                   style="-fx-font-size:20px;-fx-font-weight:bold;-fx-text-fill:#e8edf5;"/>
+            <Label fx:id="lblSubtitulo" text="Acceso exclusivo — Administrador"
+                   style="-fx-font-size:12px;-fx-text-fill:#4a5a78;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Formulario -->
+    <VBox styleClass="card" spacing="16">
+        <Label fx:id="lblFormTitulo" text="Nueva contraseña para usuario del sistema"
+               style="-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:#8a9bbf;"/>
+
+        <!-- Usuario -->
+        <VBox spacing="6">
+            <Label fx:id="lblUsuarioLbl" text="SELECCIONAR USUARIO" styleClass="etiqueta-campo"/>
+            <ComboBox fx:id="cmbUsuario" promptText="Elige un usuario..."
+                      maxWidth="1.7976931348623157E308"/>
+        </VBox>
+
+        <!-- Nueva contraseña -->
+        <VBox spacing="6">
+            <Label fx:id="lblNuevaLbl" text="NUEVA CONTRASEÑA" styleClass="etiqueta-campo"/>
+            <PasswordField fx:id="txtNueva" promptText="Mínimo 8 caracteres, mayúscula, número..."/>
+            <Label fx:id="lblFuerza" text="" style="-fx-font-size:11px;"/>
+        </VBox>
+
+        <!-- Confirmar contraseña -->
+        <VBox spacing="6">
+            <Label fx:id="lblConfirmarLbl" text="CONFIRMAR CONTRASEÑA" styleClass="etiqueta-campo"/>
+            <PasswordField fx:id="txtConfirmar" promptText="Repite la contraseña..."/>
+        </VBox>
+
+        <!-- Botones -->
+        <HBox spacing="12">
+            <Button fx:id="btnCambiar" text="🔑 Cambiar Contraseña"
+                    styleClass="btn-primario" onAction="#onCambiar"/>
+            <Button fx:id="btnRefrescar" text="🔄 Refrescar"
+                    styleClass="btn-contorno" onAction="#onRefrescar"/>
+        </HBox>
+
+        <!-- Mensaje -->
+        <Label fx:id="lblMensaje" text="" wrapText="true"
+               style="-fx-font-size:12px;-fx-font-weight:bold;"/>
+    </VBox>
+
+    <!-- Historial de cambios -->
+    <VBox styleClass="card" spacing="12" VBox.vgrow="ALWAYS">
+        <Label fx:id="lblHistorialTitulo" text="📋 Historial de Cambios"
+               style="-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:#e8edf5;"/>
+
+        <TableView fx:id="tablaHistorial" styleClass="table-view" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colHFecha"     text="Fecha/Hora"  prefWidth="160"/>
+                <TableColumn fx:id="colHUsuario"   text="Usuario"     prefWidth="130"/>
+                <TableColumn fx:id="colHAdmin"     text="Cambiado por" prefWidth="130"/>
+                <TableColumn fx:id="colHResultado" text="Resultado"   prefWidth="100"/>
+            </columns>
+            <placeholder>
+                <Label text="Sin cambios registrados"
+                       style="-fx-text-fill:#4a5a78;"/>
+            </placeholder>
+        </TableView>
+    </VBox>
+
+</VBox>

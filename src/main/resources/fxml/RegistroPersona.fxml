@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="app.controladores.RegistroPersonaController"
+            prefWidth="1100" prefHeight="750"
+            style="-fx-background-color: #0d1224;"
+            stylesheets="@../css/estilos.css">
+
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="15">
+            <ImageView fx:id="imgLogoUMG" fitWidth="32" fitHeight="32" preserveRatio="true"/>
+            <Label text="📋  Registro de Personas — Proceso 1"
+                   style="-fx-text-fill: #e8edf5; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                    style="-fx-background-color: transparent; -fx-background: transparent;">
+            <HBox spacing="20" style="-fx-padding: 20;">
+
+                <!-- Columna izquierda: Cámara y foto -->
+                <VBox spacing="15" minWidth="340" maxWidth="340"
+                      style="-fx-background-color: #111827; -fx-background-radius: 12;
+                             -fx-padding: 20; -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.4),10,0,0,2);">
+
+                    <Label text="📷  Captura Biométrica"
+                           style="-fx-text-fill: #4fc3f7; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+                    <!-- Vista de cámara -->
+                    <Label fx:id="lblCamaraUtilizar"
+                           text="📷  Cámara a utilizar:"
+                           style="-fx-text-fill: #8a9bbf; -fx-font-size: 11px;"/>
+                    <ComboBox fx:id="cmbCamara"
+                              promptText="Seleccionando cámaras..."
+                              maxWidth="1.7976931348623157E308"
+                              style="-fx-background-color:#0d1829;-fx-text-fill:#e8edf5;
+                 -fx-border-color:#1e2d47;-fx-border-radius:6;
+                 -fx-background-radius:6;"/>
+                    <StackPane style="-fx-background-color: #000; -fx-background-radius: 8;" prefHeight="220">
+                        <ImageView fx:id="imgPreview" fitWidth="300" fitHeight="200"
+                                   preserveRatio="true"/>
+                        <Canvas fx:id="canvasGuia" width="300" height="200"/>
+                        <Label fx:id="lblCamaraEstado" text="Cámara inactiva"
+                               style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 12px;"/>
+                    </StackPane>
+
+                    <Label fx:id="lblGuiaEnrolamiento" text=""
+                           style="-fx-text-fill: #f39c12; -fx-font-size: 11px;" wrapText="true"/>
+
+                    <HBox spacing="10">
+                        <Button fx:id="btnActivarCamara" text="📷  Activar Cámara"
+                                styleClass="btn-primario" HBox.hgrow="ALWAYS" maxWidth="1.7976931348623157E308"
+                                onAction="#activarCamara"/>
+                        <Button fx:id="btnCapturar" text="📸  Capturar"
+                                styleClass="btn-secundario" disable="true"
+                                onAction="#capturarFoto"/>
+                    </HBox>
+
+                    <!-- Foto capturada -->
+                    <VBox fx:id="panelFotoCapturada" visible="false" managed="false"
+                          spacing="8" alignment="CENTER"
+                          style="-fx-background-color: rgba(39,174,96,0.1);
+                                 -fx-border-color: rgba(39,174,96,0.3);
+                                 -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12;">
+                        <Label text="✅  Foto capturada"
+                               style="-fx-text-fill: #27ae60; -fx-font-size: 12px;"/>
+                        <ImageView fx:id="imgFotoCapturada" fitWidth="120" fitHeight="120"
+                                   preserveRatio="true"
+                                   style="-fx-effect: dropshadow(gaussian,rgba(0,0,0,0.5),6,0,0,2);"/>
+                    </VBox>
+
+                    <Separator style="-fx-opacity: 0.3;"/>
+
+                    <!-- Enrolamiento -->
+                    <Label text="🧠  Enrolamiento Facial"
+                           style="-fx-text-fill: #4fc3f7; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                    <ProgressBar fx:id="progEnrolamiento" progress="0"
+                                 maxWidth="1.7976931348623157E308" prefHeight="10"
+                                 style="-fx-accent: #27ae60;"/>
+                    <Label fx:id="lblEstadoEnrolamiento" text="Captura una foto primero"
+                           style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 11px;"
+                           wrapText="true"/>
+                    <Button fx:id="btnEnrolar" text="🧠  Iniciar Enrolamiento"
+                            styleClass="btn-secundario" disable="true"
+                            maxWidth="1.7976931348623157E308"
+                            onAction="#enrolarRostro"/>
+                </VBox>
+
+                <!-- Columna derecha: Formulario -->
+                <VBox spacing="15" HBox.hgrow="ALWAYS"
+                      style="-fx-background-color: #111827; -fx-background-radius: 12;
+                             -fx-padding: 20; -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.4),10,0,0,2);">
+
+                    <Label text="👤  Datos Personales"
+                           style="-fx-text-fill: #4fc3f7; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+                    <!-- Fila 1: Nombre + Apellido (siempre visibles) -->
+                    <GridPane hgap="15" vgap="12">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                        </columnConstraints>
+
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Nombre *" style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
+                            <TextField fx:id="txtNombre" promptText="Nombre" styleClass="campo-texto"/>
+                        </VBox>
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Apellido *" style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
+                            <TextField fx:id="txtApellido" promptText="Apellido" styleClass="campo-texto"/>
+                        </VBox>
+
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <Label text="Teléfono" style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
+                            <TextField fx:id="txtTelefono" promptText="+502 XXXX-XXXX" styleClass="campo-texto"/>
+                        </VBox>
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <Label text="Correo UMG *" style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
+                            <TextField fx:id="txtCorreo" promptText="usuario@umg.edu.gt" styleClass="campo-texto"/>
+                        </VBox>
+
+                        <!-- Tipo de Persona (siempre visible) -->
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                            <Label text="Tipo de Persona *" style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
+                            <ComboBox fx:id="cmbTipoPersona" maxWidth="1.7976931348623157E308"
+                                      promptText="Seleccionar..." styleClass="campo-texto"/>
+                        </VBox>
+                        <!-- Rol: label que muestra lo mismo que TipoPersona, NO editable -->
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                            <Label text="Rol del Sistema" style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
+                            <Label fx:id="lblRolSistema" text="—"
+                                   style="-fx-text-fill: #4fc3f7; -fx-font-size: 13px; -fx-font-weight: bold;
+                                          -fx-background-color: rgba(79,195,247,0.08);
+                                          -fx-background-radius: 6; -fx-padding: 7 12;
+                                          -fx-border-color: rgba(79,195,247,0.2); -fx-border-radius: 6;"
+                                   maxWidth="1.7976931348623157E308"/>
+                            <!-- Campo oculto para mantener la lógica del controller -->
+                            <ComboBox fx:id="cmbRol" visible="false" managed="false"
+                                      maxWidth="1.7976931348623157E308" styleClass="campo-texto"/>
+                        </VBox>
+                    </GridPane>
+
+                    <Separator style="-fx-opacity: 0.3;"/>
+
+                    <!-- ══════════════════════════════════════ -->
+                    <!--  SECCIÓN ACADÉMICA — solo Estudiantes  -->
+                    <!-- ══════════════════════════════════════ -->
+                    <VBox fx:id="panelAcademico" spacing="15" visible="false" managed="false">
+                        <Label text="🎓  Datos Académicos"
+                               style="-fx-text-fill: #4fc3f7; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+                        <GridPane hgap="15" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="40"/>
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="60"/>
+                            </columnConstraints>
+
+                            <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                <Label text="Carné" style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
+                                <TextField fx:id="txtCarne" promptText="0000-00-0000" styleClass="campo-texto"/>
+                            </VBox>
+                            <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                <Label text="Carrera" style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
+                                <ComboBox fx:id="cmbCarrera" maxWidth="1.7976931348623157E308"
+                                          styleClass="campo-texto" style="-fx-max-width: infinity;"/>
+                            </VBox>
+                        </GridPane>
+
+                        <!-- Nota informativa sobre la sección -->
+                        <HBox style="-fx-background-color: rgba(243,156,18,0.12);
+                                     -fx-border-color: rgba(243,156,18,0.35);
+                                     -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 14;"
+                              spacing="8" alignment="CENTER_LEFT">
+                            <Label text="ℹ️" style="-fx-font-size: 14px;"/>
+                            <Label text="La sección se asigna automáticamente al inscribirse en cada curso. Un estudiante puede estar en secciones distintas según el curso."
+                                   style="-fx-text-fill: #f39c12; -fx-font-size: 11px;" wrapText="true"
+                                   HBox.hgrow="ALWAYS"/>
+                        </HBox>
+
+                        <Separator style="-fx-opacity: 0.3;"/>
+                    </VBox>
+
+                    <!-- ══════════════════════════════════════════ -->
+                    <!--  SECCIÓN ADMINISTRATIVO — Encargado/Sub   -->
+                    <!-- ══════════════════════════════════════════ -->
+                    <VBox fx:id="panelAdministrativo" spacing="15" visible="false" managed="false">
+                        <Label text="🏢  Datos Administrativos"
+                               style="-fx-text-fill: #4fc3f7; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+                        <GridPane hgap="15" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                                <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                            </columnConstraints>
+
+                            <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                <Label text="Cargo Administrativo *"
+                                       style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
+                                <ComboBox fx:id="cmbCargoAdmin" maxWidth="1.7976931348623157E308"
+                                          promptText="Seleccionar cargo..." styleClass="campo-texto"/>
+                            </VBox>
+
+                            <!-- Correo del encargado — solo visible si es SubEncargado -->
+                            <VBox fx:id="panelCorreoEncargado" spacing="5"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                  visible="false" managed="false">
+                                <Label text="Correo del Encargado *"
+                                       style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
+                                <TextField fx:id="txtCorreoEncargado"
+                                           promptText="encargado@umg.edu.gt"
+                                           styleClass="campo-texto"/>
+                            </VBox>
+                        </GridPane>
+
+                        <!-- Aviso SubEncargado -->
+                        <VBox fx:id="panelAvisoSubencargado" visible="false" managed="false"
+                              style="-fx-background-color: rgba(155,89,182,0.12);
+                                     -fx-border-color: rgba(155,89,182,0.4);
+                                     -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14;"
+                              spacing="6">
+                            <Label text="⚠️  Permisos de SubEncargado"
+                                   style="-fx-text-fill: #9b59b6; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <Label text="El SubEncargado puede consultar y operar igual que el Encargado. Sin embargo, cualquier intento de modificar o eliminar datos del Encargado generará automáticamente un correo de autorización al Encargado registrado."
+                                   style="-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 11px;"
+                                   wrapText="true"/>
+                        </VBox>
+
+                        <Separator style="-fx-opacity: 0.3;"/>
+                    </VBox>
+
+                    <!-- Credenciales (siempre visibles) -->
+                    <Label text="🔑  Credenciales del Sistema"
+                           style="-fx-text-fill: #4fc3f7; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+                    <HBox spacing="15">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Usuario" style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
+                            <TextField fx:id="txtUsuarioSistema" promptText="usuario_sistema" styleClass="campo-texto"
+                                       maxWidth="1.7976931348623157E308"/>
+                        </VBox>
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Contraseña Inicial" style="-fx-text-fill: rgba(255,255,255,0.6); -fx-font-size: 11px;"/>
+                            <PasswordField fx:id="txtPasswordInicial" promptText="••••••••" styleClass="campo-texto"
+                                           maxWidth="1.7976931348623157E308"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Mensaje -->
+                    <VBox fx:id="panelMensaje" visible="false" managed="false"
+                          style="-fx-background-color: rgba(79,195,247,0.1);
+                                 -fx-border-color: rgba(79,195,247,0.3);
+                                 -fx-border-radius:8; -fx-background-radius:8; -fx-padding:10 16;">
+                        <Label fx:id="lblMensaje" text="" wrapText="true"
+                               style="-fx-text-fill: #4fc3f7; -fx-font-size: 12px;"/>
+                    </VBox>
+
+                    <Region VBox.vgrow="ALWAYS"/>
+
+                    <HBox spacing="12">
+                        <Button fx:id="btnGuardar" text="💾  Guardar Registro"
+                                styleClass="btn-primario" HBox.hgrow="ALWAYS"
+                                maxWidth="1.7976931348623157E308"
+                                onAction="#guardarPersona"/>
+                        <Button text="🔄  Limpiar"
+                                styleClass="btn-secundario"
+                                onAction="#limpiarFormulario"/>
+                    </HBox>
+
+                    <!-- Panel resultado -->
+                    <VBox fx:id="panelResultado" visible="false" managed="false"
+                          spacing="10" alignment="CENTER"
+                          style="-fx-background-color: rgba(39,174,96,0.1);
+                                 -fx-border-color: rgba(39,174,96,0.3);
+                                 -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 15;">
+                        <Label text="✅  Registro exitoso"
+                               style="-fx-text-fill: #27ae60; -fx-font-size: 14px; -fx-font-weight:bold;"/>
+                        <HBox spacing="10" alignment="CENTER">
+                            <Button text="📄  Ver Carnet PDF"
+                                    styleClass="btn-primario" onAction="#verCarnet"/>
+                            <Button text="📧  Enviar por Email"
+                                    styleClass="btn-secundario" onAction="#enviarCarnetCorreo"/>
+                            <Button text="➕  Nuevo Registro"
+                                    styleClass="btn-secundario" onAction="#limpiarFormulario"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </HBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

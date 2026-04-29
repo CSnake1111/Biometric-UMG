@@ -1,0 +1,58 @@
+# ══════════════════════════════════════════════
+# 🔐 CREDENCIALES — NUNCA subir
+# ══════════════════════════════════════════════
+.env
+.env.*
+*.env
+src/main/resources/db.properties
+data/claves/
+
+# ══════════════════════════════════════════════
+# 🔒 DATOS SENSIBLES (usuarios / biometría)
+# ══════════════════════════════════════════════
+data/fotos/
+data/rostros/
+data/intrusos/
+data/pdf/
+data/qr/
+data/verificacion/
+data/labels.txt
+
+# ══════════════════════════════════════════════
+# 📦 COMPILADOS
+# ══════════════════════════════════════════════
+target/
+build/
+out/
+dist/
+*.class
+*.jar
+*.war
+
+# ══════════════════════════════════════════════
+# 🧠 IDEs
+# ══════════════════════════════════════════════
+.idea/
+*.iml
+.vscode/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# NetBeans
+nbproject/
+
+# ══════════════════════════════════════════════
+# 🧾 LOGS
+# ══════════════════════════════════════════════
+*.log
+hs_err_pid*.log
+replay_pid*.log
+
+# ══════════════════════════════════════════════
+# 🖥️ SISTEMA
+# ══════════════════════════════════════════════
+.DS_Store
+Thumbs.db
